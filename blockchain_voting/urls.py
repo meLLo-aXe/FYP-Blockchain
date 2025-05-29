@@ -16,9 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.contrib.auth.views import LoginView
+from django.contrib.auth import views as auth_views 
+from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LoginView.as_view(), name='login'),
-    path('', include('poll.urls'))
+    path('', include('poll.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='poll/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 ]
+
+handler404 = 'poll.views.custom_404'

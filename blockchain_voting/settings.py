@@ -81,6 +81,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -115,9 +116,14 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = 'vote'
+DEBUG = True
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'

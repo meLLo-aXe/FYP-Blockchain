@@ -1,12 +1,64 @@
 {% extends 'poll/base.html' %}
 
 {% block content %}
-    <div class="jumbotron text-left">
-        <h1 class="display-4">What is Blockchain based Voting?</h1>
-        <p class="lead my-4">Blockchain based voting is a secure, transparent and decentralised way of voting.
-            It taps the secure blockchain technology, essentially converting ballots into transactions
-            and securely mining blocks out of them. This way anyone can monitor votes but at the same time
-            your vote is completely anonymous, preserving your identity.
-        </p>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="container mt-5">
+
+    <!-- Problem Statement -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2>🔍 Problem Statement</h2>
+            <p>
+                Traditional voting systems are vulnerable to fraud, delay, and lack transparency.
+                Our blockchain-based solution offers a decentralized and tamper-proof approach to secure electronic voting.
+            </p>
+        </div>
+        <div class="col-md-6 text-center">
+            <lottie-player src="https://lottie.host/87856a67-d1b6-4568-8b23-6d77e9306a68/8MbdAyFiF6.json" background="transparent" speed="1" style="width: 100%; max-width: 300px;" loop autoplay></lottie-player>
+        </div>
     </div>
+
+    <!-- Blockchain EVM -->
+    <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-6">
+            <h2>🧱 What is Blockchain EVM?</h2>
+            <p>
+                A blockchain-based EVM leverages decentralized ledger technology to provide secure, transparent, and tamper-resistant 
+                digital voting, ensuring voter privacy, auditability, and trustworthiness throughout the election process.
+.
+            </p>
+        </div>
+        <div class="col-md-6 text-center">
+            <lottie-player src="https://lottie.host/ded02e9c-0f64-4b83-b7a5-8c011d4cb16d/Iu9AaFAVSP.json" background="transparent" speed="1" style="width: 100%; max-width: 300px;" loop autoplay></lottie-player>
+        </div>
+    </div>
+
+    <!-- Why Blockchain Voting -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2>🚀 Why is Blockchain Voting Better?</h2>
+            <ul>
+                <li><strong>Transparency:</strong> Public ledger for auditability</li>
+                <li><strong>Security:</strong> Votes can't be changed after being cast</li>
+                <li><strong>Privacy:</strong> Anonymity of voters preserved</li>
+                <li><strong>Real-time:</strong> Instant result generation</li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+            <lottie-player src="https://lottie.host/3edc3835-4b9a-4f0b-b6f1-40b4298a5f9e/r1YB1H2m5W.json" background="transparent" speed="1" style="width: 100%; max-width: 300px;" loop autoplay></lottie-player>
+        </div>
+    </div>
+
+</div>
 {% endblock %}
+

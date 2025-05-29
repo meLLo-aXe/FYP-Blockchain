@@ -1,0 +1,142 @@
+{% extends 'poll/base.html' %}
+
+{% block content %}
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <h2 class="mb-4 text-center">Voter Signup</h2>
+
+      <form method="post" id="signupForm" class="border p-4 shadow-sm bg-white rounded" onsubmit="return validateKeyGenerated();">
+        {% csrf_token %}
+        
+
+        <div class="form-group">
+          <label for="username">Username (VoterID):</label>
+          <input type="text" name="username" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm_password">Confirm Password:</label>
+          <input type="password" name="confirm_password" class="form-control" required>
+        </div>
+
+        <!-- Hidden Public Key Fields -->
+        <input type="hidden" name="n" id="n_field">
+        <input type="hidden" name="e" id="e_field">
+
+        <!-- Display Generated Public Key -->
+        <div class="form-group">
+          <label>Generated Public Key:</label>
+          <textarea id="publicKeyDisplay" class="form-control" rows="3" readonly></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-3">Register</button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <button onclick="generateAndDownloadKey()" class="btn btn-success">Generate & Download Private Key</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ SUCCESS MODAL -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Private Key Downloaded</h5>
+      </div>
+      <div class="modal-body">
+        Your private key was successfully generated and downloaded. Keep it safe!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ❌ ERROR MODAL -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Signup Failed</h5>
+      </div>
+      <div class="modal-body" id="errorMessage">
+        Something went wrong during signup.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+<script>
+let keyGenerated = false;
+
+function generateAndDownloadKey() {
+    const keypair = forge.pki.rsa.generateKeyPair({bits: 2048, e: 0x10001});
+    const publicKey = keypair.publicKey;
+    const privateKeyPem = forge.pki.privateKeyToPem(keypair.privateKey);
+
+    // Assign public key parts to hidden inputs
+    document.getElementById("n_field").value = publicKey.n.toString(10);
+    document.getElementById("e_field").value = publicKey.e.toString(10);
+
+    // Display public key
+    document.getElementById("publicKeyDisplay").value = publicKey.n.toString(10) + "\n" + publicKey.e.toString(10);
+
+    // Download private key file
+    const blob = new Blob([privateKeyPem], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = "private_key.pem";
+    link.click();
+
+    $('#successModal').modal('show');
+    keyGenerated = true;
+}
+
+function validateKeyGenerated() {
+    if (!keyGenerated) {
+        $('#errorMessage').text("Please generate and download your private key before signing up.");
+        $('#errorModal').modal('show');
+        return false;
+    }
+    return true;
+}
+</script>
+
+{% if show_error_modal %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("errorMessage").innerText = "{{ error_message }}";
+        $('#errorModal').modal('show');
+    });
+</script>
+{% endif %}
+{% endblock %}
